@@ -15,6 +15,9 @@ Requirements:
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+import matplotlib.pyplot as plt 
+import matplotlib
+matplotlib.use('Agg')  # Headless backend for servers
 import matplotlib.pyplot as plt
 from datetime import datetime
 import time
@@ -264,7 +267,7 @@ def analyze_and_plot(df):
 
     plt.tight_layout()
     plt.savefig('output/news_analysis.png', dpi=150, bbox_inches='tight')
-    plt.show()
+    ##plt.show()
     print("  Chart saved to output/news_analysis.png")
 
 
@@ -332,6 +335,28 @@ def main():
 
     print("\n  Done. Check the 'output/' folder for results.\n")
 
+    
+def scrape_news():
+    """Called by app.py to get cleaned articles as a list of dicts."""
+    all_articles = []
+
+    scrapers = [
+        ("Moneycontrol", scrape_moneycontrol),
+        ("Economic Times", scrape_economic_times),
+        ("Business Standard", scrape_business_standard),
+        ("LiveMint", scrape_livemint),
+    ]
+
+    for name, scraper_fn in scrapers:
+        articles = scraper_fn()
+        all_articles.extend(articles)
+
+    all_articles = add_mock_articles_if_empty(all_articles)
+    df = clean_data(all_articles)
+    return df.to_dict(orient='records')
+
+
 
 if __name__ == "__main__":
     main()
+    # ── Flask-compatible entry point ──────────────────────────────────────────────
