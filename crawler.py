@@ -15,7 +15,7 @@ Requirements:
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-import matplotlib.pyplot as plt 
+# import matplotlib.pyplot as plt 
 import matplotlib
 matplotlib.use('Agg')  # Headless backend for servers
 import matplotlib.pyplot as plt
